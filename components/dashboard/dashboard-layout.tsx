@@ -25,6 +25,7 @@ interface UserUsage {
 interface DashboardLayoutProps {
   children: React.ReactNode;
   projects?: Project[];
+  documents?: any[]; 
   userUsage?: UserUsage;
   onUpgrade?: () => void;
   upgrading?: boolean;
@@ -33,6 +34,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({
   children,
   projects = [],
+  documents = [],
   userUsage,
   onUpgrade,
   upgrading = false,
@@ -41,7 +43,7 @@ export function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col bg-white">
+      <div className="min-h-screen w-full flex flex-col">
         {/* Header sits inside the provider so its trigger has context */}
         <AppHeader
           userUsage={userUsage}
@@ -50,11 +52,12 @@ export function DashboardLayout({
         />
 
         {/* Main area below the fixed header */}
-        <div className="flex flex-1 h-[calc(100vh-73px)] relative">
+        <div className="flex flex-1 relative">
           {/* Desktop sidebar */}
           <div className="hidden md:flex">
             <AppSidebar
               projects={projects}
+               documents={documents}
               activeView={activeView}
               onViewChange={setActiveView}
             />
@@ -75,7 +78,7 @@ export function DashboardLayout({
           </div>
 
           {/* Page content */}
-          <SidebarInset className="flex-1 overflow-auto bg-white">
+          <SidebarInset className="flex-1 overflow-auto">
             {children}
           </SidebarInset>
         </div>

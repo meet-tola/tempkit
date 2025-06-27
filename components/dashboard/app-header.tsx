@@ -20,6 +20,7 @@ import {
   Monitor,
 } from "lucide-react";
 import Image from "next/image";
+import { ModeToggle } from "../theme-toggle";
 
 interface UserUsage {
   plan: string;
@@ -61,9 +62,6 @@ export function AppHeader({
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" className="hidden md:flex">
-              <Bell className="w-4 h-4" />
-            </Button>
 
             <div className="hidden sm:flex items-center space-x-2 text-sm">
               <span className="text-slate-600">Personal</span>
@@ -73,37 +71,16 @@ export function AppHeader({
             </div>
 
             {/* Theme Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                  <Palette className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {themes.map((theme) => {
-                  const Icon = theme.icon;
-                  return (
-                    <DropdownMenuItem
-                      key={theme.value}
-                      className="flex items-center space-x-2"
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{theme.name}</span>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ModeToggle />
 
             <Button
               variant="outline"
-              size="sm"
-              className="hidden sm:flex"
+              className="hidden sm:flex shadow-none"
               onClick={onUpgrade}
               disabled={upgrading || userUsage?.plan === "PRO"}
             >
               <ArrowUp className="w-4 h-4 mr-2" />
-              {userUsage?.plan === "PRO" ? "Pro Plan" : "Upgrade"}
+              {userUsage?.plan === "PRO" ? "Pro Plan" : "Upgrade Plan"}
             </Button>
 
             <DropdownMenu>
@@ -113,7 +90,7 @@ export function AppHeader({
                   size="sm"
                   className="w-8 h-8 rounded-full p-0"
                 >
-                  <div className="w-6 h-6 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-full flex items-center justify-center">
                     <User className="w-3 h-3 text-white" />
                   </div>
                 </Button>

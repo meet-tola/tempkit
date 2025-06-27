@@ -28,7 +28,7 @@ async function seedTemplates() {
     const deleted = await prisma.template.deleteMany({
       where: { userId: systemUser.id },
     })
-    console.log(`🗑️ Deleted ${deleted.count} existing templates.`)
+    console.log(`Deleted ${deleted.count} existing templates.`)
 
     // Create prebuilt templates
     for (const template of prebuiltTemplates) {

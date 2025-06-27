@@ -20,21 +20,25 @@ interface Project {
 
 interface AppSidebarProps {
   projects: Project[];
+  documents?: any[]; 
   activeView: string;
   onViewChange: (view: string) => void;
 }
 
 export function AppSidebar({
   projects,
+  documents,
   activeView,
   onViewChange,
 }: AppSidebarProps) {
+
+  console.log("Documents in sidebar:", documents);  
   return (
     <Sidebar
       collapsible="icon"
-      className="border-none mt-[73px]"
+      className="border-none mt-[60px]"
     >
-      <SidebarContent className="p-3 pt-6 bg-white border-r border-slate-200">
+      <SidebarContent className="p-3 pt-6  border-r border-slate-200">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -74,6 +78,36 @@ export function AppSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Add recent documents section */}
+        {documents && documents.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-xs font-medium text-slate-500 px-2 py-1">
+              Recent Documents
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1">
+                {documents.slice(0, 5).map((doc) => (
+                  <SidebarMenuItem key={doc.id}>
+                    <SidebarMenuButton
+                      isActive={activeView === `doc-${doc.id}`}
+                      onClick={() => {
+                        onViewChange(`doc-${doc.id}`);
+                        // Optionally navigate to the editor
+                        // router.push(`/editor?document=${doc.id}`);
+                      }}
+                      className="w-full justify-start text-sm"
+                      tooltip={doc.name}
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span className="truncate">{doc.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         {projects.length > 0 && (
           <SidebarGroup>

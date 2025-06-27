@@ -61,10 +61,12 @@ export default function EditorPage() {
           setContent(result.document.content)
 
           // Update URL to document editor
-          router.replace(`/editor?document=${result.document.id}`)
+          const newUrl = `/editor?document=${result.document.id}`
+          window.history.replaceState({}, "", newUrl)
         } else {
           alert(result.error || "Failed to generate document")
           router.push("/dashboard")
+          return
         }
 
         setAiGenerating(false)
@@ -76,7 +78,9 @@ export default function EditorPage() {
           setTitle(doc.title)
           setContent(doc.content)
         } else {
+          alert("Document not found")
           router.push("/dashboard")
+          return
         }
       } else if (templateName) {
         // Create from template
@@ -86,16 +90,29 @@ export default function EditorPage() {
         if (template) {
           setTitle(`New ${template.name}`)
           setContent(template.content)
+          setDocument(null) // Make sure this is null for new documents
         } else {
+          alert("Template not found")
           router.push("/dashboard")
+          return
         }
       } else {
         // New blank document
         setTitle("Untitled Document")
-        setContent({ type: "doc", content: [] })
+        setContent({
+          type: "doc",
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Start writing your document here..." }],
+            },
+          ],
+        })
+        setDocument(null)
       }
     } catch (error) {
       console.error("Failed to load editor:", error)
+      alert("Failed to load editor")
       router.push("/dashboard")
     } finally {
       setLoading(false)
@@ -120,13 +137,17 @@ export default function EditorPage() {
       if (result.success) {
         setDocument(result.document)
         if (!document?.id) {
-          // Update URL for new document
-          router.replace(`/editor?document=${result.document.id}`)
+          // Update URL for new document without causing a redirect
+          const newUrl = `/editor?document=${result.document.id}`
+          window.history.replaceState({}, "", newUrl)
         }
+        // Show success message
+        console.log("Document saved successfully")
       } else {
         alert(result.error || "Failed to save document")
       }
     } catch (error) {
+      console.error("Save error:", error)
       alert("Failed to save document")
     } finally {
       setSaving(false)
@@ -369,3 +390,4 @@ export default function EditorPage() {
     </div>
   )
 }
+  
